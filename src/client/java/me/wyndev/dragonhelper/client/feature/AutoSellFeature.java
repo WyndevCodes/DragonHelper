@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class AutoSellFeature {
 
-    private static int tick = 0;
+    private static int tick = 1;
     private static final int additionalSellOffset = 40; //40 ticks later
     private static final Random random = new Random();
     private static int randomOffset = 0;
