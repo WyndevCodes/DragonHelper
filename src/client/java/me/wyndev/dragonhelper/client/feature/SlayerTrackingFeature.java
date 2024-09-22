@@ -49,7 +49,7 @@ public class SlayerTrackingFeature {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> state = State.NONE);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            if (++currentTick < 60) return;
+            if (++currentTick < 400) return;
             if (client.getNetworkHandler() != null && state == State.NONE) {
                 if (DragonHelperClient.getPlayerData().getZombieSlayerExp() == 0) {
                     state = State.WAIT;

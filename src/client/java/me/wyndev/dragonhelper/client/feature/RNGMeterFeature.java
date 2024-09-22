@@ -45,7 +45,7 @@ public class RNGMeterFeature {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> state = State.NONE);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            if (++currentTick < 20) return;
+            if (++currentTick < 250) return;
             if (client.getNetworkHandler() != null && state == State.NONE) {
                 if (DragonHelperClient.getPlayerData().getRngMeterExp() == 0) {
                     state = State.WAIT;

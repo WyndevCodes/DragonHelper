@@ -33,7 +33,7 @@ public class KillTrackingFeature {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> hasSentTrackingCommand = false);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            if (++ticks < 2) return;
+            if (++ticks < 100) return;
             if (client.getNetworkHandler() != null && !hasSentTrackingCommand) {
                 hasSentTrackingCommand = true;
                 client.getNetworkHandler().sendCommand(KILL_TRACKING_COMMAND);
