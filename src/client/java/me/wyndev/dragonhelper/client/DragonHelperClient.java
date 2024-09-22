@@ -29,6 +29,7 @@ public class DragonHelperClient implements ClientModInitializer {
         KillTrackingFeature.register();
         RNGMeterFeature.register();
         SlayerTrackingFeature.register();
+        RenewExperimentsFeature.register();
 
         DragonHelperScreen.register();
     }
