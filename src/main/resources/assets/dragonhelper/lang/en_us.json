@@ -5,6 +5,7 @@
   "text.autoconfig.dragonhelper.option.messages.hideOtherPlayerDrops": "Hides the dragon item drop messages for other players",
   "text.autoconfig.dragonhelper.option.messages.hideSummoningEyePlace": "Hides the summoning eye placement messages",
   "text.autoconfig.dragonhelper.option.messages.hideLootnumText": "Hides the loot number and magic find text",
+  "text.autoconfig.dragonhelper.option.messages.hidePvpProtectionText": "Hides the 'Hey! Sorry, but you can't PvP here.' message",
   "text.autoconfig.dragonhelper.option.autosell": "Auto-Sell",
   "text.autoconfig.dragonhelper.option.autosell.@Tooltip": "Dragnet auto-sell settings",
   "text.autoconfig.dragonhelper.option.autosell.normalAutoSell": "Automatically runs the /sell command during the auto-sell",

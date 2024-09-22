@@ -40,6 +40,7 @@ public class DragonHelperConfig implements ConfigData {
         public boolean hideOtherPlayerDrops = true;
         public boolean hideSummoningEyePlace = false;
         public boolean hideLootnumText = false;
+        public boolean hidePvpProtectionText = true;
     }
 
     public static class AutoSellConfig {

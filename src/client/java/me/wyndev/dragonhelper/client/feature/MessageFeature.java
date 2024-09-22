@@ -44,6 +44,11 @@ public class MessageFeature {
                 return false; //hide loot messages
             }
 
+            //pvp message
+            if (rawLowerText.contains("you can't pvp here") && DragonHelperConfig.get().messages.hidePvpProtectionText) {
+                return false; //hide pvp protection message
+            }
+
             //dragon notifier
             if (rawLowerText.contains("dragon") && rawLowerText.contains("has spawned")) {
                 //infernal and superior notification
