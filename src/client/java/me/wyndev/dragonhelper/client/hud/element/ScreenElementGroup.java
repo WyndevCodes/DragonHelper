@@ -79,9 +79,13 @@ public class ScreenElementGroup {
     }
 
     public void setAllPosition(double mouseX, double mouseY, int dragOffsetX, int dragOffsetY, int screenWidth, int screenHeight) {
+        int x = parent.getX();
+        int y = parent.getY();
         setElementPosition(parent, mouseX, mouseY, dragOffsetX, dragOffsetY, screenWidth, screenHeight);
         Arrays.stream(children).forEach(child -> {
-            setElementPosition(child, child.getX(), child.getY(), dragOffsetX, dragOffsetY, screenWidth, screenHeight);
+            int offsetX = child.getX() - x;
+            int offsetY = child.getY() - y;
+            setElementPosition(child, mouseX + offsetX, mouseY + offsetY, dragOffsetX, dragOffsetY, screenWidth, screenHeight);
         });
     }
 
