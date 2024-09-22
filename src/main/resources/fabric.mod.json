@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "dragonhelper",
+  "version": "${version}",
+  "name": "DragonHelper",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/dragonhelper/DragonNetIcon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "me.wyndev.dragonhelper.client.DragonHelperClient"
+    ],
+    "main": [
+      "me.wyndev.dragonhelper.Dragonhelper"
+    ],
+    "modmenu": [
+      "me.wyndev.dragonhelper.client.config.ModMenuImpl"
+    ]
+  },
+  "mixins": [
+    "dragonhelper.mixins.json",
+    {
+      "config": "dragonhelper.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

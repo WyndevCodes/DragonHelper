@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.wyndev.dragonhelper.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BossBarHudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
