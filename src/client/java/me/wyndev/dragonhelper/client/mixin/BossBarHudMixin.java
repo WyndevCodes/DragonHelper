@@ -14,7 +14,7 @@ public class BossBarHudMixin {
     @ModifyVariable(method = "render", at = @At(value = "STORE"), ordinal = 0)
     public ClientBossBar onRender(ClientBossBar bar) {
         //return if the endstone protector has been recently spawned
-        if (System.currentTimeMillis() - DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime() < 50_000) return bar;
+        if (System.currentTimeMillis() - DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime() < 20_000) return bar;
 
         //set the new last spawn time
         DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
