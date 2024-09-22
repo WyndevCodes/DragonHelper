@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class SlayerTrackingFeature {
 
-    private static final String SLAYER_EXP_TRACKING_COMMAND = "xxxx";
+    private static final String SLAYER_EXP_TRACKING_COMMAND = "debugslayerxp";
     private static State state = State.NONE;
     private static int currentTick = 0; //delayed loading
 
