@@ -25,6 +25,6 @@
   "text.autoconfig.dragonhelper.option.ui.rngMeterTracker": "Shows your current RNG meter experience",
   "text.autoconfig.dragonhelper.option.ui.zombieSlayerLevelTracker": "Shows your current zombie slayer level progress",
 
-  "dragonhelper.category": "DragonHelper",
+  "category.dragonhelper": "DragonHelper",
   "key.dragonhelper.configScreen": "Edit the UI layout for DragonHelper!"
 }
