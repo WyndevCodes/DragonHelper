@@ -29,13 +29,12 @@ public class SlayerTrackingFeature {
                 return false;
             } else if (state == State.SUCCESS) {
                 //exp tracking from boss kills
-                if (!s.contains("level 7 > total xp")) return true;
-
-                //update slayer meter exp
-                String[] sub = s.split(">");
-                int exp = Integer.parseInt(sub[1].replaceAll("[^0-9.]", ""));
+                if (!s.contains("level") || !s.contains("> total xp")) return true;
 
                 try {
+                    //update slayer meter exp
+                    String[] sub = s.split(">");
+                    int exp = Integer.parseInt(sub[1].replaceAll("[^0-9.]", ""));
                     if (s.contains("zombie")) {
                         DragonHelperClient.getPlayerData().setZombieSlayerExp(exp);
                     }

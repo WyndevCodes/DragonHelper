@@ -14,18 +14,18 @@ public class RNGMeterFeature {
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
             String s = text.getString().toLowerCase();
-            int rngMeterExp = Integer.parseInt(s.replaceAll("[^0-9.]", ""));
+            int rngMeterExp = 0;
+            try {
+                rngMeterExp = Integer.parseInt(s.replaceAll("[^0-9.]", ""));
+            } catch (NumberFormatException ignored) {}
 
             if (state == State.WAIT) {
                 //rng meter exp loading
                 if (!s.contains("rng meter experience")) return true;
 
                 //save data
-                try {
-                    DragonHelperClient.getPlayerData().setRngMeterExp(rngMeterExp);
-                    state = State.SUCCESS;
-                } catch (NumberFormatException ignored) {
-                }
+                DragonHelperClient.getPlayerData().setRngMeterExp(rngMeterExp);
+                state = State.SUCCESS;
 
                 return false;
             } else if (state == State.SUCCESS) {
@@ -33,9 +33,7 @@ public class RNGMeterFeature {
                 if (!s.startsWith("rng meter -")) return true;
 
                 //update rng meter exp
-                try {
-                    DragonHelperClient.getPlayerData().setRngMeterExp(rngMeterExp);
-                } catch (NumberFormatException ignored) {}
+                DragonHelperClient.getPlayerData().setRngMeterExp(rngMeterExp);
             }
 
             return true;
