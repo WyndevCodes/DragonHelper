@@ -1,6 +1,5 @@
 package me.wyndev.dragonhelper.client.hud.element;
 
-import me.wyndev.dragonhelper.client.data.ModData;
 import net.minecraft.client.gui.screen.Screen;
 
 /**
@@ -8,7 +7,6 @@ import net.minecraft.client.gui.screen.Screen;
  */
 public class ResizableElement extends ScreenElement {
 
-    private int scale; //scale (in pixels)
     private final int minSize;
     private final int maxSize;
 
@@ -34,26 +32,7 @@ public class ResizableElement extends ScreenElement {
 
             x = Math.max(0, Math.min(screen.width - width, x));
             y = Math.max(0, Math.min(screen.height - height, y));
-
         }
-    }
-
-    @Override
-    public void loadData(int defaultX, int defaultY) {
-        this.x = ModData.getInstance().getInt(identifier + "-x", defaultX);
-        this.y = ModData.getInstance().getInt(identifier + "-y", defaultY);
-        this.width = ModData.getInstance().getInt(identifier + "-width", super.width);
-        this.height = ModData.getInstance().getInt(identifier + "-height", super.height);
-        this.scale = ModData.getInstance().getInt(identifier + "-scale", scale);
-    }
-
-    @Override
-    public void saveData() {
-        ModData.getInstance().setInt(identifier + "-x", x);
-        ModData.getInstance().setInt(identifier + "-y", y);
-        ModData.getInstance().setInt(identifier + "-width", width);
-        ModData.getInstance().setInt(identifier + "-height", height);
-        ModData.getInstance().setInt(identifier + "-scale", scale);
     }
 
 }

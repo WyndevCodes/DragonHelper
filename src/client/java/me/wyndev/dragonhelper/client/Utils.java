@@ -1,6 +1,8 @@
 package me.wyndev.dragonhelper.client;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.MutableText;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,6 +66,32 @@ public class Utils {
     public static String formatNumber(double number, char spacer, char decimal) {
         DecimalFormat decimalFormat = new DecimalFormat("#" + spacer + "###" + decimal + "##");
         return decimalFormat.format(number);
+    }
+
+    /**
+     * Checks if the current minecraft client is on dragnet.
+     * @return True if the {@link MinecraftClient#getInstance()} is on dragnet, false otherwise
+     */
+    public static boolean isOnDragnet() {
+        return isOnDragnet(MinecraftClient.getInstance());
+    }
+
+    /**
+     * Checks if a minecraft client is on dragnet.
+     * @return True if the inputted {@link MinecraftClient} is on dragnet, false otherwise
+     */
+    public static boolean isOnDragnet(MinecraftClient minecraftClient) {
+        return isOnDragnet(minecraftClient.getNetworkHandler());
+    }
+
+    /**
+     * Checks if a minecraft client network handler is connected to dragnet.
+     * @return True if the inputted {@link ClientPlayNetworkHandler} is on dragnet, false otherwise
+     */
+    public static boolean isOnDragnet(@Nullable ClientPlayNetworkHandler networkHandler) {
+        if (networkHandler == null) return false;
+        ServerInfo serverInfo = networkHandler.getServerInfo();
+        return (serverInfo != null && serverInfo.name.equalsIgnoreCase("dragnet"));
     }
 
 }

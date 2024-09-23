@@ -1,6 +1,7 @@
 package me.wyndev.dragonhelper.client.feature;
 
 import me.wyndev.dragonhelper.client.DragonHelperClient;
+import me.wyndev.dragonhelper.client.Utils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -13,8 +14,13 @@ public class KillTrackingFeature {
 
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
+            if (!hasSentTrackingCommand || !Utils.isOnDragnet()) return true;
+
             //kill tracking
             String textString = text.getString().toLowerCase();
+
+            if (textString.equalsIgnoreCase("debugkill is now enabled.")) return false;
+
             if (!textString.startsWith("you killed")) return true;
             //dragon kill logic is done somewhere else
             if (textString.contains("zealot")) {
@@ -36,6 +42,7 @@ public class KillTrackingFeature {
             if (++ticks < 100) return;
             if (client.getNetworkHandler() != null && !hasSentTrackingCommand) {
                 hasSentTrackingCommand = true;
+                if (!Utils.isOnDragnet(client)) return;
                 client.getNetworkHandler().sendCommand(KILL_TRACKING_COMMAND);
             }
         });

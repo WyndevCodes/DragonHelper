@@ -1,6 +1,7 @@
 package me.wyndev.dragonhelper.client.mixin;
 
 import me.wyndev.dragonhelper.client.DragonHelperClient;
+import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.feature.MessageFeature;
 import net.minecraft.client.gui.hud.BossBarHud;
 import net.minecraft.client.gui.hud.ClientBossBar;
@@ -18,6 +19,8 @@ public class BossBarHudMixin {
 
         //set the new last spawn time
         DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
+
+        if (!Utils.isOnDragnet()) return bar; //exit if not on dragnet
 
         //send the spawn notification to the client
         if (bar.getName().getString().toLowerCase().contains("protector")) {

@@ -1,6 +1,7 @@
 package me.wyndev.dragonhelper.client.feature;
 
 import me.wyndev.dragonhelper.client.DragonHelperClient;
+import me.wyndev.dragonhelper.client.Utils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -13,6 +14,8 @@ public class RNGMeterFeature {
 
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
+            if (!Utils.isOnDragnet()) return true;
+
             String s = text.getString().toLowerCase();
             int rngMeterExp = 0;
             try {
@@ -47,6 +50,7 @@ public class RNGMeterFeature {
             if (client.getNetworkHandler() != null && state == State.NONE) {
                 if (DragonHelperClient.getPlayerData().getRngMeterExp() == 0) {
                     state = State.WAIT;
+                    if (!Utils.isOnDragnet(client)) return;
                     client.getNetworkHandler().sendCommand(RNG_METER_TRACKING_COMMAND);
                 } else {
                     state = State.SUCCESS;

@@ -23,6 +23,8 @@ public class MessageFeature {
             if (player == null || player.getDisplayName() == null) return true;
             String displayName = player.getDisplayName().getString();
 
+            if (!Utils.isOnDragnet()) return true;
+
             //check for message
             //dragon drop message
             if (rawLowerText.contains(" has obtained ")) {

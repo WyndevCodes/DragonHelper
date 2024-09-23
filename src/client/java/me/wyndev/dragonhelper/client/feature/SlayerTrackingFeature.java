@@ -1,6 +1,7 @@
 package me.wyndev.dragonhelper.client.feature;
 
 import me.wyndev.dragonhelper.client.DragonHelperClient;
+import me.wyndev.dragonhelper.client.Utils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -13,11 +14,13 @@ public class SlayerTrackingFeature {
 
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
+            if (!Utils.isOnDragnet()) return true;
+
             String s = text.getString().toLowerCase();
 
             if (state == State.WAIT) {
                 //rng meter exp loading
-                if (!s.contains("slayer experience")) return true;
+                if (!s.contains("slayer xp experience")) return true;
 
                 //save data
                 try {
@@ -52,6 +55,7 @@ public class SlayerTrackingFeature {
             if (client.getNetworkHandler() != null && state == State.NONE) {
                 if (DragonHelperClient.getPlayerData().getZombieSlayerExp() == 0) {
                     state = State.WAIT;
+                    if (!Utils.isOnDragnet(client)) return;
                     client.getNetworkHandler().sendCommand(SLAYER_EXP_TRACKING_COMMAND);
                 } else {
                     state = State.SUCCESS;

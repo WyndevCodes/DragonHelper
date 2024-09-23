@@ -4,6 +4,7 @@ import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
 import me.wyndev.dragonhelper.client.data.SlayerLevel;
+import me.wyndev.dragonhelper.client.hud.element.ButtonElement;
 import me.wyndev.dragonhelper.client.hud.element.ScreenElement;
 import me.wyndev.dragonhelper.client.hud.element.ScreenElementGroup;
 import me.wyndev.dragonhelper.client.hud.element.TextElement;
@@ -78,6 +79,13 @@ public class DragonHelperScreen extends Screen {
                         return "Unknown slayer!";
                     }, () -> 0x00FF40, 470, 10, 50, 50, true)
             ),
+            new ScreenElementGroup(
+                    () -> true, //always show
+                    new ButtonElement("reset-button", (screen, group) -> Arrays.stream(DragonHelperScreen.getElements()).forEach(ScreenElementGroup::resetAll),
+                            Text.translatable("text.config.dragonhelper.resetbutton"),
+                            ScreenElement.ScreenBound.WIDTH.getValue(), ScreenElement.ScreenBound.HEIGHT.getValue(),
+                            60, 20)
+            )
     };
 
     private ScreenElementGroup dragging;
@@ -107,26 +115,35 @@ public class DragonHelperScreen extends Screen {
             }
         });
 
-        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> Arrays.stream(elements).forEach(element -> element.drawAll(drawContext)));
+        //mouse pos are -1 because this is not being rendered in a GUI and is just a HUD overlay
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> Arrays.stream(elements).forEach(element -> {
+            if (element.shouldRenderInHUD()) element.drawAll(drawContext, -1, -1, false);
+        }));
+    }
+
+    public static ScreenElementGroup[] getElements() {
+        return elements;
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        Arrays.stream(elements).forEach(element -> element.drawAll(context));
+        Arrays.stream(elements).forEach(element -> element.drawAll(context, mouseX, mouseY, true));
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
+            boolean shouldCheckDrag = true;
             for (ScreenElementGroup element : elements) {
-                if (element.isMouseOverAny(mouseX, mouseY)) {
+                if (element.isMouseOverAnyDraggable(mouseX, mouseY) && shouldCheckDrag) {
                     dragging = element;
                     dragOffsetX = (int) mouseX - element.getParent().getX();
                     dragOffsetY = (int) mouseY - element.getParent().getY();
-                    break;
+                    shouldCheckDrag = false;
                 }
+                element.clickAny(mouseX, mouseY, this);
             }
             return true;
         }

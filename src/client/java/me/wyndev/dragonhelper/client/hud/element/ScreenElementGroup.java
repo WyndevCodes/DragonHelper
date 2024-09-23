@@ -1,5 +1,6 @@
 package me.wyndev.dragonhelper.client.hud.element;
 
+import me.wyndev.dragonhelper.client.hud.DragonHelperScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -30,9 +31,16 @@ public class ScreenElementGroup {
         this.hasResized = false;
     }
 
-    public void drawAll(DrawContext drawContext) {
+    public void drawAll(DrawContext drawContext, double mouseX, double mouseY, boolean isConfig) {
         if (!renderCheckCallback.call()) return;
 
+        resizeElements();
+
+        if (parent.shouldRenderInHUD() || isConfig) parent.render(drawContext, mouseX, mouseY);
+        Arrays.stream(children).forEach(child -> { if (child.shouldRenderInHUD() || isConfig) child.render(drawContext, mouseX, mouseY); });
+    }
+
+    private void resizeElements() {
         if (!hasResized) {
             //resize square elements to match the text height and width
             TextElement primaryText = null;
@@ -68,9 +76,6 @@ public class ScreenElementGroup {
             }
             hasResized = true;
         }
-
-        parent.draw(drawContext);
-        Arrays.stream(children).forEach(child -> child.draw(drawContext));
     }
 
     public void saveAll() {
@@ -79,29 +84,56 @@ public class ScreenElementGroup {
     }
 
     public void setAllPosition(double mouseX, double mouseY, int dragOffsetX, int dragOffsetY, int screenWidth, int screenHeight) {
+        int largestChildOffsetX = 0;
+        int largestChildOffsetY = 0;
+        int largestChildWidth = 0;
+        int largestChildHeight = 0;
+
+        for (ScreenElement child : children) {
+            int offsetX = child.getX() - parent.getX();
+            int offsetY = child.getY() - parent.getY();
+
+            largestChildOffsetX = Math.max(offsetX, largestChildOffsetX);
+            largestChildOffsetY = Math.max(offsetY, largestChildOffsetY);
+            largestChildWidth = Math.max(child.getWidth(), largestChildWidth);
+            largestChildHeight = Math.max(child.getHeight(), largestChildHeight);
+        }
+
+        int xMax = screenWidth - Math.max(parent.getWidth(), largestChildOffsetX + largestChildWidth);
+        int yMax = screenHeight - Math.max(parent.getHeight(), largestChildOffsetY + largestChildHeight);
+
         int x = parent.getX();
         int y = parent.getY();
-        setElementPosition(parent, mouseX, mouseY, dragOffsetX, dragOffsetY, screenWidth, screenHeight);
-        Arrays.stream(children).forEach(child -> {
-            int offsetX = child.getX() - x;
-            int offsetY = child.getY() - y;
-            setElementPosition(child, mouseX + offsetX, mouseY + offsetY, dragOffsetX, dragOffsetY, screenWidth, screenHeight);
-        });
+
+        setElementPosition(parent, mouseX, mouseY, dragOffsetX, dragOffsetY, 0, 0, xMax, yMax);
+
+        Arrays.stream(children).forEach(child -> setElementPosition(child, mouseX, mouseY, dragOffsetX, dragOffsetY,
+                child.getX() - x, y - parent.getY(), xMax, yMax));
     }
 
-    private void setElementPosition(ScreenElement element, double mouseX, double mouseY, int dragOffsetX, int dragOffsetY, int screenWidth, int screenHeight) {
-        element.setX((int) mouseX - dragOffsetX);
-        element.setY((int) mouseY - dragOffsetY);
+    private void setElementPosition(ScreenElement element, double mouseX, double mouseY, int dragOffsetX, int dragOffsetY,
+                                    int offsetX, int offsetY, int xLimit, int yLimit) {
+        element.setX((int) mouseX + offsetX - dragOffsetX);
+        element.setY((int) mouseY + offsetY - dragOffsetY);
 
-        element.setX(Math.max(0, Math.min(screenWidth - element.getWidth(), element.getX())));
-        element.setY(Math.max(0, Math.min(screenHeight - element.getWidth(), element.getY())));
+        element.setX(Math.max(offsetX, Math.min(xLimit, element.getX())));
+        element.setY(Math.max(offsetY, Math.min(yLimit, element.getY())));
 
         element.saveData();
     }
 
-    public boolean isMouseOverAny(double mouseX, double mouseY) {
-        if (parent.isMouseOver(mouseX, mouseY)) return true;
-        return Arrays.stream(children).anyMatch(child -> child.isMouseOver(mouseX, mouseY));
+    public boolean isMouseOverAnyDraggable(double mouseX, double mouseY) {
+        if (parent.canDrag() && parent.isMouseOver(mouseX, mouseY)) return true;
+        return Arrays.stream(children).anyMatch(child -> child.canDrag() && child.isMouseOver(mouseX, mouseY));
+    }
+
+    public void clickAny(double mouseX, double mouseY, DragonHelperScreen screen) {
+        if (parent instanceof ClickableElement clickableElement && parent.isMouseOver(mouseX, mouseY)) clickableElement.click(screen, this);
+        Arrays.stream(children).forEach(child -> {
+            if (child instanceof ClickableElement clickableElement && child.isMouseOver(mouseX, mouseY)) {
+                clickableElement.click(screen, this);
+            }
+        });
     }
 
     public void resizeAfterMouseScroll(Screen screen, double mouseX, double mouseY, double verticalAmount) {
@@ -113,7 +145,18 @@ public class ScreenElementGroup {
         });
     }
 
+    public void resetAll() {
+        parent.reset();
+        Arrays.stream(children).forEach(ScreenElement::reset);
+        hasResized = false;
+        resizeElements();
+    }
+
     public ScreenElement getParent() {
         return parent;
+    }
+
+    public boolean shouldRenderInHUD() {
+        return parent.shouldRenderInHUD() || Arrays.stream(children).anyMatch(ScreenElement::shouldRenderInHUD);
     }
 }

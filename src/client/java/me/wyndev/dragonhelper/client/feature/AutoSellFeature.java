@@ -1,9 +1,9 @@
 package me.wyndev.dragonhelper.client.feature;
 
+import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ServerInfo;
 
 import java.util.Random;
 
@@ -25,9 +25,7 @@ public class AutoSellFeature {
 
             //auto-sell on pickup
             ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-            if (networkHandler == null) return;
-            ServerInfo serverInfo = networkHandler.getServerInfo();
-            if (serverInfo != null && !serverInfo.name.equalsIgnoreCase("dragnet")) return; //don't run these commands on other servers
+            if (!Utils.isOnDragnet(networkHandler)) return;
 
             //regular sell command (sell regular items)
             if (DragonHelperConfig.get().autosell.normalAutoSell && (tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) == 0) {

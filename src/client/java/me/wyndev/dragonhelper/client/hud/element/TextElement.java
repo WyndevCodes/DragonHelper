@@ -22,13 +22,28 @@ public class TextElement extends ResizableElement {
     }
 
     @Override
-    public void draw(DrawContext drawContext) {
+    protected void draw(DrawContext drawContext, double mouseX, double mouseY) {
         String text = textFunction.call();
-        this.width = MinecraftClient.getInstance().textRenderer.getWidth(text);
-        if (this.height == -1) this.height = MinecraftClient.getInstance().textRenderer.fontHeight;
+
+        resizeBounds(text);
 
         if (hasBackground) drawContext.fill(x - 5, y - 4, x + width + 5, y + height + 4, 0x66000000);
         drawContext.drawText(MinecraftClient.getInstance().textRenderer, text, x, y, colorFunction.call(), false);
+    }
+
+    @Override
+    public void reset() {
+        this.x = defaultX;
+        this.y = defaultY;
+        this.width = defaultWidth;
+        this.height = -1;
+        saveData();
+        resizeBounds(textFunction.call());
+    }
+
+    private void resizeBounds(String text) {
+        this.width = MinecraftClient.getInstance().textRenderer.getWidth(text);
+        if (this.height == -1) this.height = MinecraftClient.getInstance().textRenderer.fontHeight;
     }
 
     public boolean hasBackground() {

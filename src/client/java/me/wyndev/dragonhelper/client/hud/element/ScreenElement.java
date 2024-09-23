@@ -19,15 +19,31 @@ public class ScreenElement {
     protected int width;
     protected int height;
 
+    protected int defaultX;
+    protected int defaultY;
+    protected int defaultWidth;
+    protected int defaultHeight;
+
     public ScreenElement(String identifier, String texture, int defaultX, int defaultY, int defaultWidth, int defaultHeight) {
         this.identifier = identifier;
         if (texture != null) { this.texture = Identifier.of(DragonHelperClient.NAMESPACE, "textures/gui/" + texture); }
+        this.defaultX = defaultX;
+        this.defaultY = defaultY;
+        this.defaultWidth = defaultWidth;
+        this.defaultHeight = defaultHeight;
         this.width = defaultWidth;
         this.height = defaultHeight;
-        loadData(defaultX, defaultY); //IMPORTANT: must be after height and width initialization
+        loadData(); //IMPORTANT: must be after height and width initialization
     }
 
-    public void draw(DrawContext drawContext) {
+    public void render(DrawContext drawContext, double mouseX, double mouseY) {
+        if (x == ScreenBound.WIDTH.getValue()) x = drawContext.getScaledWindowWidth() - width;
+        if (y == ScreenBound.HEIGHT.getValue()) y = drawContext.getScaledWindowHeight() - height;
+
+        draw(drawContext, mouseX, mouseY);
+    }
+
+    protected void draw(DrawContext drawContext, double mouseX, double mouseY) {
         if (texture == null) return;
         MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
         drawContext.drawTexture(texture, x, y, 0, 0, width, height, width, height);
@@ -37,11 +53,11 @@ public class ScreenElement {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
     }
 
-    public void loadData(int defaultX, int defaultY) {
+    public void loadData() {
         this.x = ModData.getInstance().getInt(identifier + "-x", defaultX);
         this.y = ModData.getInstance().getInt(identifier + "-y", defaultY);
-        this.width = ModData.getInstance().getInt(identifier + "-width", width);
-        this.height = ModData.getInstance().getInt(identifier + "-height", height);
+        this.width = ModData.getInstance().getInt(identifier + "-width", defaultWidth);
+        this.height = ModData.getInstance().getInt(identifier + "-height", defaultHeight);
     }
 
     public void saveData() {
@@ -49,6 +65,14 @@ public class ScreenElement {
         ModData.getInstance().setInt(identifier + "-y", y);
         ModData.getInstance().setInt(identifier + "-width", width);
         ModData.getInstance().setInt(identifier + "-height", height);
+    }
+
+    public void reset() {
+        this.x = defaultX;
+        this.y = defaultY;
+        this.width = defaultWidth;
+        this.height = defaultHeight;
+        saveData();
     }
 
     public int getX() {
@@ -86,5 +110,32 @@ public class ScreenElement {
     @FunctionalInterface
     public interface ElementCallback<T> {
         T call();
+    }
+
+    public enum ScreenBound {
+        WIDTH(-10),
+        HEIGHT(-20);
+
+        private final int value;
+
+        ScreenBound(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    /**
+     * @return True if this element can be dragged around and repositioned in
+     * the mod screen, false otherwise
+     */
+    public boolean canDrag() {
+        return true;
+    }
+
+    public boolean shouldRenderInHUD() {
+        return true;
     }
 }

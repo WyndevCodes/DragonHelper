@@ -1,5 +1,6 @@
 package me.wyndev.dragonhelper.client.feature;
 
+import me.wyndev.dragonhelper.client.Utils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.client.MinecraftClient;
@@ -20,7 +21,7 @@ public class RenewExperimentsFeature {
             if (entity.getDisplayName() != null && entity.getDisplayName().getString().equalsIgnoreCase(NPC_DISPLAY_NAME)) {
                 //clicked on experiments NPC
                 ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
-                if (networkHandler == null) return ActionResult.PASS;
+                if (!Utils.isOnDragnet(networkHandler)) return ActionResult.PASS;
 
                 triedToRenew = true;
                 networkHandler.sendCommand("renewexperiments");
