@@ -3,6 +3,7 @@ package me.wyndev.dragonhelper.client.feature;
 import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
+import me.wyndev.dragonhelper.client.config.ServerConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,11 +24,18 @@ public class MessageFeature {
             if (player == null || player.getDisplayName() == null) return true;
             String displayName = player.getDisplayName().getString();
 
-            if (!Utils.isOnDragnet()) return true;
+            String server = Utils.getClientServer();
+            if (server == null) return true;
+            String dragonDropText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.DRAGON_DROP_CONTAINS_TEXT);
+            String eyePlaceText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.EYE_PLACE_CONTAINS_TEXT);
+            String lootNumText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.LOOTNUM_CONTAINS_TEXT);
+            String pvpProtectionText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PVP_PROTECTION_MESSAGE_CONTAINS);
+            String dragonSpawnText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.DRAGON_SPAWN_CONTAINS_TEXT);
+            boolean hasInfernal = (Boolean) ServerConfig.instance.getServerFeatureValue(server, Feature.HAS_INFERNAL_DRAGONS);
 
             //check for message
             //dragon drop message
-            if (rawLowerText.contains(" has obtained ")) {
+            if (dragonDropText != null && rawLowerText.contains(dragonDropText)) {
                 if (!rawText.contains(displayName)) {
                     if (DragonHelperConfig.get().messages.hideOtherPlayerDrops) return false; //hide other user drop messages
                 } else {
@@ -37,27 +45,27 @@ public class MessageFeature {
             }
 
             //eye placement message
-            if (rawLowerText.contains("placed a summoning eye") && DragonHelperConfig.get().messages.hideSummoningEyePlace) {
+            if (eyePlaceText != null && rawLowerText.contains(eyePlaceText) && DragonHelperConfig.get().messages.hideSummoningEyePlace) {
                 return false; //hide summoning eye placement messages
             }
 
             //loot number message
-            if (rawLowerText.contains("lootnum") && DragonHelperConfig.get().messages.hideLootnumText) {
+            if (lootNumText != null && rawLowerText.contains(lootNumText) && DragonHelperConfig.get().messages.hideLootnumText) {
                 return false; //hide loot messages
             }
 
             //pvp message
-            if (rawLowerText.contains("you can't pvp here") && DragonHelperConfig.get().messages.hidePvpProtectionText) {
+            if (pvpProtectionText != null && rawLowerText.contains(pvpProtectionText) && DragonHelperConfig.get().messages.hidePvpProtectionText) {
                 return false; //hide pvp protection message
             }
 
             //dragon notifier
-            if (rawLowerText.contains("dragon") && rawLowerText.contains("has spawned")) {
+            if (rawLowerText.contains("dragon") && dragonSpawnText != null && rawLowerText.contains(dragonSpawnText)) {
                 //infernal and superior notification
                 if (rawLowerText.contains("superior") && DragonHelperConfig.get().notifications.notifyForSuperior) {
                     Utils.sendTitleToClient(Text.of("Superior Dragon Spawn!").copy().withColor(0xFF0000));
                     player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
-                } else if (rawLowerText.contains("infernal") && DragonHelperConfig.get().notifications.notifyForInfernal) {
+                } else if (hasInfernal && rawLowerText.contains("infernal") && DragonHelperConfig.get().notifications.notifyForInfernal) {
                     Utils.sendTitleToClient(Text.of("Infernal Dragon Spawn!").copy().withColor(0xFC7703));
                     player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 }

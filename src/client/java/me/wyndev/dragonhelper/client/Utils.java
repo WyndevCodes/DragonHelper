@@ -69,29 +69,32 @@ public class Utils {
     }
 
     /**
-     * Checks if the current minecraft client is on dragnet.
-     * @return True if the {@link MinecraftClient#getInstance()} is on dragnet, false otherwise
+     * Gets the current server that the minecraft client is connected to, if it is a valid server for this mod.
+     * @return The lowercased server name of the {@link MinecraftClient#getInstance()} is connected to, or null if not valid
      */
-    public static boolean isOnDragnet() {
-        return isOnDragnet(MinecraftClient.getInstance());
+    @Nullable
+    public static String getClientServer() {
+        return getClientServer(MinecraftClient.getInstance());
     }
 
     /**
-     * Checks if a minecraft client is on dragnet.
-     * @return True if the inputted {@link MinecraftClient} is on dragnet, false otherwise
+     * Gets the current server that the minecraft client is connected to, if it is a valid server for this mod.
+     * @return The lowercased server name of the {@link MinecraftClient} is connected to, or null if not valid
      */
-    public static boolean isOnDragnet(MinecraftClient minecraftClient) {
-        return isOnDragnet(minecraftClient.getNetworkHandler());
+    @Nullable
+    public static String getClientServer(MinecraftClient minecraftClient) {
+        return getClientServer(minecraftClient.getNetworkHandler());
     }
 
     /**
-     * Checks if a minecraft client network handler is connected to dragnet.
-     * @return True if the inputted {@link ClientPlayNetworkHandler} is on dragnet, false otherwise
+     * Gets the current server that the minecraft client's network handler is connected to, if it is a valid server for this mod.
+     * @return The lowercased server name of the {@link ClientPlayNetworkHandler} is connected to, or null if not valid
      */
-    public static boolean isOnDragnet(@Nullable ClientPlayNetworkHandler networkHandler) {
-        if (networkHandler == null) return false;
+    @Nullable
+    public static String getClientServer(@Nullable ClientPlayNetworkHandler networkHandler) {
+        if (networkHandler == null) return null;
         ServerInfo serverInfo = networkHandler.getServerInfo();
-        return (serverInfo != null && serverInfo.name.equalsIgnoreCase("dragnet"));
+        return (serverInfo != null ? serverInfo.name.toLowerCase() : null);
     }
 
 }

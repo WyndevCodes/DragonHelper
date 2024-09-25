@@ -1,0 +1,28 @@
+{
+  "dragnet": {
+    "auto-sell-normal": "sell",
+    "auto-sell-special": "specialsell",
+    "auto-sell-eyes": "eyes",
+    "kill-tracking-command": "debugkill",
+    "kill-contains-text": "you killed",
+    "experiments-npc-name": "CIT-e98c26597f30",
+    "renew-experiments-command": "renewexperiments",
+    "rng-meter-tracking-command": "debugmeter",
+    "rng-meter-update-starts-text": "rng meter -",
+    "rng-meter-load-contains-text": "rng meter experience",
+    "slayer-exp-tracking-command": "debugslayerxp",
+    "slayer-exp-update-contains-text": "> total xp",
+    "slayer-exp-load-contains-text": "slayer xp experience",
+    "protector-name-contains-text": "protector",
+    "has-infernal-dragons": true,
+    "dragon-drop-contains-text": " has obtained ",
+    "eye-place-contains-text": "placed a summoning eye",
+    "lootnum-contains-text": "lootnum",
+    "pvp-protection-message-contains": "you can't pvp here",
+    "dragon-spawn-contains-text": "has spawned"
+  },
+  "dragfights": {
+    "auto-sell-normal": "sell",
+    "kill-tracking-command": "debugkill"
+  }
+}

@@ -1,6 +1,7 @@
 package me.wyndev.dragonhelper.client.feature;
 
 import me.wyndev.dragonhelper.client.Utils;
+import me.wyndev.dragonhelper.client.config.ServerConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.client.MinecraftClient;
@@ -11,20 +12,27 @@ import net.minecraft.util.Hand;
 
 public class RenewExperimentsFeature {
 
-    private static final String NPC_DISPLAY_NAME = "CIT-e98c26597f30";
     private static boolean triedToRenew = false;
 
     public static void register() {
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             if (hand == Hand.OFF_HAND) return ActionResult.PASS;
 
-            if (entity.getDisplayName() != null && entity.getDisplayName().getString().equalsIgnoreCase(NPC_DISPLAY_NAME)) {
+            ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+
+            String server = Utils.getClientServer(networkHandler);
+            if (server == null) return ActionResult.PASS;
+            String npc = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.EXPERIMENTS_NPC_NAME);
+            if (npc == null) return ActionResult.PASS;
+
+            if (entity.getDisplayName() != null && entity.getDisplayName().getString().equalsIgnoreCase(npc)) {
                 //clicked on experiments NPC
-                ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
-                if (!Utils.isOnDragnet(networkHandler)) return ActionResult.PASS;
+
+                String command = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.RENEW_EXPERIMENTS_COMMAND);
+                if (command == null) return ActionResult.PASS;
 
                 triedToRenew = true;
-                networkHandler.sendCommand("renewexperiments");
+                networkHandler.sendCommand(command);
             }
 
             return ActionResult.PASS;
@@ -33,7 +41,7 @@ public class RenewExperimentsFeature {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
             if (!triedToRenew) return true;
             triedToRenew = false;
-            if (text.getString().equalsIgnoreCase("try again later!")) {
+            if (text.getString().contains("try again later!")) {
                 if (MinecraftClient.getInstance().player != null) {
                     MinecraftClient.getInstance().player.sendMessage(Text.of("You are out of experiments!").copy().withColor(0xFF0000));
                 }
