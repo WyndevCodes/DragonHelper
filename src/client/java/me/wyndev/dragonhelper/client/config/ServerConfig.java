@@ -84,6 +84,7 @@ public class ServerConfig extends JsonDataProvider {
         return serverFeatureData.get(server.toLowerCase()).containsKey(feature);
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, Map<Feature, Object>> convertToFeatureData(Map<String, Object> serverData) {
         Map<String, Map<Feature, Object>> converted = new HashMap<>();
 

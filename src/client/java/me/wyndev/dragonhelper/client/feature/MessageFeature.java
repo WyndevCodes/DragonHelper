@@ -31,7 +31,7 @@ public class MessageFeature {
             String lootNumText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.LOOTNUM_CONTAINS_TEXT);
             String pvpProtectionText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PVP_PROTECTION_MESSAGE_CONTAINS);
             String dragonSpawnText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.DRAGON_SPAWN_CONTAINS_TEXT);
-            boolean hasInfernal = (Boolean) ServerConfig.instance.getServerFeatureValue(server, Feature.HAS_INFERNAL_DRAGONS);
+            Object hasInfernal = ServerConfig.instance.getServerFeatureValue(server, Feature.HAS_INFERNAL_DRAGONS); //MUST CAST TO OBJ B/C BOOL CANNOT BE NULL
 
             //check for message
             //dragon drop message
@@ -65,7 +65,7 @@ public class MessageFeature {
                 if (rawLowerText.contains("superior") && DragonHelperConfig.get().notifications.notifyForSuperior) {
                     Utils.sendTitleToClient(Text.of("Superior Dragon Spawn!").copy().withColor(0xFF0000));
                     player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
-                } else if (hasInfernal && rawLowerText.contains("infernal") && DragonHelperConfig.get().notifications.notifyForInfernal) {
+                } else if (hasInfernal != null && (Boolean)hasInfernal && rawLowerText.contains("infernal") && DragonHelperConfig.get().notifications.notifyForInfernal) {
                     Utils.sendTitleToClient(Text.of("Infernal Dragon Spawn!").copy().withColor(0xFC7703));
                     player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 }
