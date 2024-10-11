@@ -6,6 +6,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
+//TODO separate configs per server
 @Config(name = "dragonhelper")
 public class DragonHelperConfig implements ConfigData {
 

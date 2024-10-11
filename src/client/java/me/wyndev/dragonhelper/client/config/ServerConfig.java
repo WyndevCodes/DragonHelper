@@ -54,6 +54,8 @@ public class ServerConfig extends JsonDataProvider {
         Map<String, Object> dragfightsData = new HashMap<>();
         dragfightsData.put("auto-sell-normal", "sell");
         dragfightsData.put("kill-tracking-command", "debugkill");
+        dragnetData.put("dragon-drop-contains-text", " has obtained ");
+        dragfightsData.put("eye-place-contains-text", "placed a summoning eye");
 
         return Map.of(
                 "dragnet", dragnetData,
