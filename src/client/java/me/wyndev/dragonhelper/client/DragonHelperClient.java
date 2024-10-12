@@ -12,6 +12,8 @@ import me.wyndev.dragonhelper.client.hud.DragonHelperScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -19,6 +21,7 @@ public class DragonHelperClient implements ClientModInitializer {
 
     public static String NAMESPACE = "dragonhelper";
     public static final String CONFIG_DIRECTORY = "config" + File.separator + "dragonhelper";
+    public static Logger LOGGER = LoggerFactory.getLogger("DragonHelper");
 
     private static PlayerData playerData;
     private static ServerDataTracker serverDataTracker;
@@ -26,6 +29,7 @@ public class DragonHelperClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
+        LOGGER.info("Registering configs...");
         //create mod directory if it does not exist
         File dir = new File(CONFIG_DIRECTORY);
         if (!dir.exists()) dir.mkdirs();
@@ -37,6 +41,7 @@ public class DragonHelperClient implements ClientModInitializer {
         serverDataTracker = new ServerDataTracker();
         playerData = new PlayerData();
 
+        LOGGER.info("Initializing mod features...");
         MessageFeature.register();
         AutoSellFeature.register();
         KillTrackingFeature.register();
@@ -47,6 +52,7 @@ public class DragonHelperClient implements ClientModInitializer {
         DragonHelperScreen.register();
 
         //create dhc reload command
+        LOGGER.info("Setting up dragonhelper command...");
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(literal("dragonhelper")
                     .then(literal("reload")
@@ -58,6 +64,8 @@ public class DragonHelperClient implements ClientModInitializer {
                         return 1;
                     })));
         });
+
+        LOGGER.info("Mod initialization complete!");
     }
 
     public static PlayerData getPlayerData() {
