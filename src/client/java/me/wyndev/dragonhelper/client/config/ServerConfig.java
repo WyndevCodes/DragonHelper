@@ -51,7 +51,7 @@ public class ServerConfig extends JsonDataProvider {
         dragnetData.put("lootnum-contains-text", "lootnum");
         dragnetData.put("pvp-protection-message-contains", "you can't pvp here");
         dragnetData.put("dragon-spawn-contains-text", "has spawned");
-        dragnetData.put("protector-timer", 60);
+        dragnetData.put("protector-timer", 60.0);
 
         Map<String, Object> dragfightsData = new HashMap<>(11);
         dragfightsData.put("auto-sell-normal", "sellall");
@@ -64,7 +64,7 @@ public class ServerConfig extends JsonDataProvider {
         dragfightsData.put("pvp-protection-message-contains", "you can't pvp here");
         dragfightsData.put("protector-name-contains-text", "protector");
         dragfightsData.put("protector-spawn-chat-message", "an endstone protector has risen");
-        dragfightsData.put("protector-timer", 300);
+        dragfightsData.put("protector-timer", 300.0);
 
         return Map.of(
                 "dragnet", dragnetData,
