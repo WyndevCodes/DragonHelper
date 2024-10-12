@@ -1,5 +1,6 @@
 package me.wyndev.dragonhelper.client.feature;
 
+import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
 import me.wyndev.dragonhelper.client.config.ServerConfig;
@@ -30,7 +31,9 @@ public class MessageFeature {
             String lootNumText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.LOOTNUM_CONTAINS_TEXT);
             String pvpProtectionText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PVP_PROTECTION_MESSAGE_CONTAINS);
             String dragonSpawnText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.DRAGON_SPAWN_CONTAINS_TEXT);
+            String protectorName = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_NAME_CONTAINS_TEXT);
             Object hasInfernal = ServerConfig.instance.getServerFeatureValue(server, Feature.HAS_INFERNAL_DRAGONS); //MUST CAST TO OBJ B/C BOOL CANNOT BE NULL
+            String protectorSpawnMessage = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_SPAWN_CHAT_MESSAGE);
 
             //check for message
             //dragon drop message
@@ -51,6 +54,16 @@ public class MessageFeature {
             //pvp message
             if (pvpProtectionText != null && rawLowerText.contains(pvpProtectionText) && DragonHelperConfig.get().getBoolean("messages.hidePvpProtectionText", true)) {
                 return false; //hide pvp protection message
+            }
+
+            //endstone protector notification on spawn without boss bar
+            if (protectorName != null && rawLowerText.contains(protectorName) && protectorSpawnMessage != null
+                    && rawLowerText.contains(protectorSpawnMessage) && DragonHelperConfig.get().getBoolean("notifications.notifyForEndstoneProtector")) {
+                //set the new last spawn time
+                DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
+                //title notification
+                sendEndstoneGolemNotificationToClient();
+                return true;
             }
 
             //dragon notifier

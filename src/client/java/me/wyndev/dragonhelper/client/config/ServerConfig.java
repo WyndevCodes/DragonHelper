@@ -1,5 +1,6 @@
 package me.wyndev.dragonhelper.client.config;
 
+import com.ibm.icu.impl.Pair;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.data.JsonDataProvider;
 import me.wyndev.dragonhelper.client.feature.Feature;
@@ -29,7 +30,7 @@ public class ServerConfig extends JsonDataProvider {
 
     @Override
     protected @Nullable Map<String, Object> getDefaultData() {
-        Map<String, Object> dragnetData = new HashMap<>(20);
+        Map<String, Object> dragnetData = new HashMap<>(21);
         dragnetData.put("auto-sell-normal", "sell");
         dragnetData.put("auto-sell-special", "specialsell");
         dragnetData.put("auto-sell-eyes", "eyes");
@@ -50,15 +51,20 @@ public class ServerConfig extends JsonDataProvider {
         dragnetData.put("lootnum-contains-text", "lootnum");
         dragnetData.put("pvp-protection-message-contains", "you can't pvp here");
         dragnetData.put("dragon-spawn-contains-text", "has spawned");
+        dragnetData.put("protector-timer", 60);
 
-        Map<String, Object> dragfightsData = new HashMap<>(7);
+        Map<String, Object> dragfightsData = new HashMap<>(11);
         dragfightsData.put("auto-sell-normal", "sellall");
         dragfightsData.put("kill-tracking-command", "debugkill");
         dragfightsData.put("kill-contains-text", "you killed");
+        dragfightsData.put("bestiary-loading-text", "bestiary kill count");
         dragfightsData.put("dragon-drop-contains-text", " has obtained ");
         dragfightsData.put("eye-place-contains-text", "placed a summoning eye");
         dragfightsData.put("dragon-spawn-contains-text", "has spawned");
         dragfightsData.put("pvp-protection-message-contains", "you can't pvp here");
+        dragfightsData.put("protector-name-contains-text", "protector");
+        dragfightsData.put("protector-spawn-chat-message", "an endstone protector has risen");
+        dragfightsData.put("protector-timer", 300);
 
         return Map.of(
                 "dragnet", dragnetData,
@@ -70,7 +76,13 @@ public class ServerConfig extends JsonDataProvider {
     public void loadData() {
         super.loadData();
 
-        serverFeatureData = convertToFeatureData(this.dataMap);
+        Pair<Map<String, Map<Feature, Object>>, Boolean> p = convertToFeatureData(this.dataMap);
+        serverFeatureData = p.first;
+        if (p.second) saveData();
+    }
+
+    public Map<String, Map<Feature, Object>> getServerFeatureData() {
+        return serverFeatureData;
     }
 
     @Nullable
@@ -90,8 +102,12 @@ public class ServerConfig extends JsonDataProvider {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, Map<Feature, Object>> convertToFeatureData(Map<String, Object> serverData) {
+    private Pair<Map<String, Map<Feature, Object>>, Boolean> convertToFeatureData(Map<String, Object> serverData) {
         Map<String, Map<Feature, Object>> converted = new HashMap<>();
+        Map<String, Object> defaultData = null;
+        if (getDefaultData() != null) defaultData = new HashMap<>(getDefaultData());
+
+        boolean addedDefaults = false;
 
         for (String server : serverData.keySet()) {
             if (!(serverData.get(server) instanceof Map)) continue;
@@ -103,13 +119,30 @@ public class ServerConfig extends JsonDataProvider {
                 try {
                     Feature modFeature = Feature.valueOf(feature.toUpperCase().replaceAll("-", "_"));
                     features.put(modFeature, data.get(feature));
+                    if (defaultData != null && defaultData.get(server) instanceof Map<?,?> map) map.remove(feature);
                 } catch (IllegalArgumentException ignored) {}
+            }
+
+            //default key checks
+            if (defaultData != null && defaultData.get(server) instanceof Map<?,?> map && super.dataMap.get(server) instanceof Map<?,?> serverMap) {
+                if (!map.isEmpty()) {
+                    for (String uncheckedFeature : ((Map<String, Object>) map).keySet()) {
+                        //default key check
+                        Feature modFeature = Feature.valueOf(uncheckedFeature.toUpperCase().replaceAll("-", "_"));
+                        if (map.containsKey(uncheckedFeature)) {
+                            var val = ((Map<String, Object>) map).get(uncheckedFeature);
+                            features.put(modFeature, val);
+                            ((Map<String, Object>)serverMap).put(uncheckedFeature, val);
+                        }
+                    }
+                    addedDefaults = true;
+                }
             }
 
             converted.put(server, features);
         }
 
-        return converted;
+        return Pair.of(converted, addedDefaults);
     }
 
 }

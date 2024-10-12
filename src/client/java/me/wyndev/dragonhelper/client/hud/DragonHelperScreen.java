@@ -51,12 +51,15 @@ public class DragonHelperScreen extends Screen {
                             () -> 0xFFFFFF, 380, 10, 50, 50, true)
             ),
             new ScreenElementGroup(
-                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.PROTECTOR_NAME_CONTAINS_TEXT) &&
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.PROTECTOR_TIMER) &&
                             DragonHelperConfig.get().getBoolean("ui.endstoneProtectorTimer", true)),
                     new ScreenElement("endstone-protector-timer", "endstone.png", 270, 10, 30, 30),
                     new TextElement("endstone-protector-text", () -> {
+                        Object time = ServerConfig.instance.getServerFeatureValue(Utils.getClientServer(), Feature.PROTECTOR_TIMER); //seconds
+                        if (time == null) return "-1";
                         if (DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime() == 0) return "Loading...";
-                        long timeUntilNext = 60_000 - (System.currentTimeMillis() - DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime());
+                        long timeUntilNext = (Math.round((double)time) * 1_000)
+                                - (System.currentTimeMillis() - DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime());
                         if (timeUntilNext < 0) return "Spawning Soon!";
                         timeUntilNext = timeUntilNext / 1_000; //convert to seconds
                         return timeUntilNext / 60 + ":" + (timeUntilNext % 60 < 10 ? "0" : "") + (timeUntilNext % 60);
