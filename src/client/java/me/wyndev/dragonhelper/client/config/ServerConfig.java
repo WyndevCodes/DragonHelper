@@ -29,7 +29,7 @@ public class ServerConfig extends JsonDataProvider {
 
     @Override
     protected @Nullable Map<String, Object> getDefaultData() {
-        Map<String, Object> dragnetData = new HashMap<>();
+        Map<String, Object> dragnetData = new HashMap<>(20);
         dragnetData.put("auto-sell-normal", "sell");
         dragnetData.put("auto-sell-special", "specialsell");
         dragnetData.put("auto-sell-eyes", "eyes");
@@ -51,11 +51,14 @@ public class ServerConfig extends JsonDataProvider {
         dragnetData.put("pvp-protection-message-contains", "you can't pvp here");
         dragnetData.put("dragon-spawn-contains-text", "has spawned");
 
-        Map<String, Object> dragfightsData = new HashMap<>();
+        Map<String, Object> dragfightsData = new HashMap<>(7);
         dragfightsData.put("auto-sell-normal", "sellall");
         dragfightsData.put("kill-tracking-command", "debugkill");
-        dragnetData.put("dragon-drop-contains-text", " has obtained ");
+        dragfightsData.put("kill-contains-text", "you killed");
+        dragfightsData.put("dragon-drop-contains-text", " has obtained ");
         dragfightsData.put("eye-place-contains-text", "placed a summoning eye");
+        dragfightsData.put("dragon-spawn-contains-text", "has spawned");
+        dragfightsData.put("pvp-protection-message-contains", "you can't pvp here");
 
         return Map.of(
                 "dragnet", dragnetData,
