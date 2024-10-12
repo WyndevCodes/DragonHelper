@@ -58,7 +58,7 @@ public class DragonHelperScreen extends Screen {
                         Object time = ServerConfig.instance.getServerFeatureValue(Utils.getClientServer(), Feature.PROTECTOR_TIMER); //seconds
                         if (time == null) return "-1";
                         if (DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime() == 0) return "Loading...";
-                        long timeUntilNext = ((int)time * 1_000)
+                        long timeUntilNext = (Math.round((double)time) * 1_000)
                                 - (System.currentTimeMillis() - DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime());
                         if (timeUntilNext < 0) return "Spawning Soon!";
                         timeUntilNext = timeUntilNext / 1_000; //convert to seconds

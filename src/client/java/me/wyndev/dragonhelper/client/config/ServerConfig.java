@@ -54,10 +54,11 @@ public class ServerConfig extends JsonDataProvider {
         dragnetData.put("protector-has-spawn-message", false);
         dragnetData.put("protector-timer", 60);
 
-        Map<String, Object> dragfightsData = new HashMap<>(10);
+        Map<String, Object> dragfightsData = new HashMap<>(11);
         dragfightsData.put("auto-sell-normal", "sellall");
         dragfightsData.put("kill-tracking-command", "debugkill");
         dragfightsData.put("kill-contains-text", "you killed");
+        dragfightsData.put("bestiary-loading-text", "bestiary kill count");
         dragfightsData.put("dragon-drop-contains-text", " has obtained ");
         dragfightsData.put("eye-place-contains-text", "placed a summoning eye");
         dragfightsData.put("dragon-spawn-contains-text", "has spawned");
