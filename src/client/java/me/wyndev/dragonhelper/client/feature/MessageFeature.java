@@ -32,7 +32,7 @@ public class MessageFeature {
             String dragonSpawnText = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.DRAGON_SPAWN_CONTAINS_TEXT);
             String protectorName = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_NAME_CONTAINS_TEXT);
             Object hasInfernal = ServerConfig.instance.getServerFeatureValue(server, Feature.HAS_INFERNAL_DRAGONS); //MUST CAST TO OBJ B/C BOOL CANNOT BE NULL
-            Object hasProtectorSpawnMessage = ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_HAS_SPAWN_MESSAGE);
+            String protectorSpawnMessage = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_SPAWN_CHAT_MESSAGE);
 
             //check for message
             //dragon drop message
@@ -56,7 +56,7 @@ public class MessageFeature {
             }
 
             //endstone protector notification on spawn without boss bar
-            if (protectorName != null && rawLowerText.contains(protectorName) && hasProtectorSpawnMessage != null && (Boolean)hasProtectorSpawnMessage) {
+            if (protectorName != null && rawLowerText.contains(protectorName) && protectorSpawnMessage != null && rawLowerText.contains(protectorSpawnMessage)) {
                 //title notification
                 sendEndstoneGolemNotificationToClient();
                 return true;

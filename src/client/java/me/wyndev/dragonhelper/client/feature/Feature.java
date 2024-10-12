@@ -17,7 +17,7 @@ public enum Feature {
     SLAYER_EXP_UPDATE_CONTAINS_TEXT(String.class),
     SLAYER_EXP_LOAD_CONTAINS_TEXT(String.class),
     PROTECTOR_NAME_CONTAINS_TEXT(String.class),
-    PROTECTOR_HAS_SPAWN_MESSAGE(Boolean.class),
+    PROTECTOR_SPAWN_CHAT_MESSAGE(String.class),
     PROTECTOR_TIMER(Double.class),
     HAS_INFERNAL_DRAGONS(Boolean.class),
     DRAGON_DROP_CONTAINS_TEXT(String.class),
