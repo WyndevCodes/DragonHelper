@@ -130,7 +130,7 @@ public class DragonHelperConfig extends JsonDataProvider {
                     "dragonKillCounter", true);
             addBooleanConfigEntry(server, subBuilder, entryBuilder, Feature.KILL_TRACKING_COMMAND, "ui",
                     "endstoneProtectorKillCounter", true);
-            addBooleanConfigEntry(server, subBuilder, entryBuilder, Feature.PROTECTOR_NAME_CONTAINS_TEXT, "ui",
+            addBooleanConfigEntry(server, subBuilder, entryBuilder, Feature.PROTECTOR_TIMER, "ui",
                     "endstoneProtectorTimer", true);
             addBooleanConfigEntry(server, subBuilder, entryBuilder, Feature.RNG_METER_TRACKING_COMMAND, "ui",
                     "rngMeterTracker", true);
