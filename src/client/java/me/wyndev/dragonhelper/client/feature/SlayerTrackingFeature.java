@@ -2,25 +2,28 @@ package me.wyndev.dragonhelper.client.feature;
 
 import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
+import me.wyndev.dragonhelper.client.config.ServerConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class SlayerTrackingFeature {
 
-    private static final String SLAYER_EXP_TRACKING_COMMAND = "debugslayerxp";
     private static State state = State.NONE;
     private static int currentTick = 0; //delayed loading
 
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
-            if (!Utils.isOnDragnet()) return true;
+            String server = Utils.getClientServer();
+            if (server == null) return true;
+            String update = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.SLAYER_EXP_UPDATE_CONTAINS_TEXT);
+            String load = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.SLAYER_EXP_LOAD_CONTAINS_TEXT);
 
             String s = text.getString().toLowerCase();
 
             if (state == State.WAIT) {
                 //rng meter exp loading
-                if (!s.contains("slayer xp experience")) return true;
+                if (load == null || !s.contains(load)) return true;
 
                 //save data
                 try {
@@ -32,7 +35,7 @@ public class SlayerTrackingFeature {
                 return false;
             } else if (state == State.SUCCESS) {
                 //exp tracking from boss kills
-                if (!s.contains("level") || !s.contains("> total xp")) return true;
+                if (update == null || !s.contains("level") || !s.contains(update)) return true;
 
                 try {
                     //update slayer meter exp
@@ -55,8 +58,19 @@ public class SlayerTrackingFeature {
             if (client.getNetworkHandler() != null && state == State.NONE) {
                 if (DragonHelperClient.getPlayerData().getZombieSlayerExp() == 0) {
                     state = State.WAIT;
-                    if (!Utils.isOnDragnet(client)) return;
-                    client.getNetworkHandler().sendCommand(SLAYER_EXP_TRACKING_COMMAND);
+
+                    String server = Utils.getClientServer(client);
+                    if (server == null) {
+                        state = State.SUCCESS;
+                        return;
+                    }
+                    String command = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.SLAYER_EXP_TRACKING_COMMAND);
+                    if (command == null) {
+                        state = State.SUCCESS;
+                        return;
+                    }
+
+                    client.getNetworkHandler().sendCommand(command);
                 } else {
                     state = State.SUCCESS;
                 }

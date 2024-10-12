@@ -2,19 +2,22 @@ package me.wyndev.dragonhelper.client.feature;
 
 import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
+import me.wyndev.dragonhelper.client.config.ServerConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class RNGMeterFeature {
 
-    private static final String RNG_METER_TRACKING_COMMAND = "debugmeter";
     private static State state = State.NONE;
     private static int currentTick = 0; //delayed loading
 
     public static void register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, isInActionBar) -> {
-            if (!Utils.isOnDragnet()) return true;
+            String server = Utils.getClientServer();
+            if (server == null) return true;
+            String update = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.RNG_METER_UPDATE_STARTS_TEXT);
+            String load = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.RNG_METER_LOAD_CONTAINS_TEXT);
 
             String s = text.getString().toLowerCase();
             int rngMeterExp = 0;
@@ -24,7 +27,7 @@ public class RNGMeterFeature {
 
             if (state == State.WAIT) {
                 //rng meter exp loading
-                if (!s.contains("rng meter experience")) return true;
+                if (load == null || !s.contains(load)) return true;
 
                 //save data
                 DragonHelperClient.getPlayerData().setRngMeterExp(rngMeterExp);
@@ -33,7 +36,7 @@ public class RNGMeterFeature {
                 return false;
             } else if (state == State.SUCCESS) {
                 //exp tracking from boss kills
-                if (!s.startsWith("rng meter -")) return true;
+                if (update == null || !s.startsWith(update)) return true;
 
                 //update rng meter exp
                 DragonHelperClient.getPlayerData().setRngMeterExp(rngMeterExp);
@@ -50,8 +53,19 @@ public class RNGMeterFeature {
             if (client.getNetworkHandler() != null && state == State.NONE) {
                 if (DragonHelperClient.getPlayerData().getRngMeterExp() == 0) {
                     state = State.WAIT;
-                    if (!Utils.isOnDragnet(client)) return;
-                    client.getNetworkHandler().sendCommand(RNG_METER_TRACKING_COMMAND);
+
+                    String server = Utils.getClientServer(client);
+                    if (server == null) {
+                        state = State.SUCCESS;
+                        return;
+                    }
+                    String command = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.RNG_METER_TRACKING_COMMAND);
+                    if (command == null) {
+                        state = State.SUCCESS;
+                        return;
+                    }
+
+                    client.getNetworkHandler().sendCommand(command);
                 } else {
                     state = State.SUCCESS;
                 }

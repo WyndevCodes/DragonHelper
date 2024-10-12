@@ -3,7 +3,9 @@ package me.wyndev.dragonhelper.client.hud;
 import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
+import me.wyndev.dragonhelper.client.config.ServerConfig;
 import me.wyndev.dragonhelper.client.data.SlayerLevel;
+import me.wyndev.dragonhelper.client.feature.Feature;
 import me.wyndev.dragonhelper.client.hud.element.ButtonElement;
 import me.wyndev.dragonhelper.client.hud.element.ScreenElement;
 import me.wyndev.dragonhelper.client.hud.element.ScreenElementGroup;
@@ -28,25 +30,29 @@ public class DragonHelperScreen extends Screen {
 
     private static final ScreenElementGroup[] elements = new ScreenElementGroup[]{
             new ScreenElementGroup(
-                    () -> DragonHelperConfig.get().ui.zealotKillCounter,
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.KILL_TRACKING_COMMAND) &&
+                            DragonHelperConfig.get().getBoolean("ui.zealotKillCounter", true)),
                     new ScreenElement("zealot-counter", "zealot.png", 90, 10, 30, 30),
                     new TextElement("zealot-counter-text", () -> Utils.formatNumber(DragonHelperClient.getPlayerData().getZealotKills()) + " Kills",
                             () -> 0xFFFFFF, 110, 10, 50, 50, true)
             ),
             new ScreenElementGroup(
-                    () -> DragonHelperConfig.get().ui.endstoneProtectorKillCounter,
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.PROTECTOR_NAME_CONTAINS_TEXT) &&
+                            DragonHelperConfig.get().getBoolean("ui.endstoneProtectorKillCounter", true)),
                     new ScreenElement("endstone-protector-counter", "endstone-golem.png", 180, 10, 10, 25),
                     new TextElement("endstone-protector-text", () -> Utils.formatNumber(DragonHelperClient.getPlayerData().getEndstoneProtectorKills()) + " Kills",
                             () -> 0xFFFFFF, 200, 10, 50, 50, true)
             ),
             new ScreenElementGroup(
-                    () -> DragonHelperConfig.get().ui.dragonKillCounter,
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.KILL_TRACKING_COMMAND) &&
+                            DragonHelperConfig.get().getBoolean("ui.dragonKillCounter", true)),
                     new ScreenElement("dragon-kill-counter", "ender-dragon.png", 360, 10, 30, 30),
                     new TextElement("dragon-kill-counter-text", () -> Utils.formatNumber(DragonHelperClient.getPlayerData().getDragonKills()) + " Kills",
                             () -> 0xFFFFFF, 380, 10, 50, 50, true)
             ),
             new ScreenElementGroup(
-                    () -> DragonHelperConfig.get().ui.endstoneProtectorTimer,
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.PROTECTOR_NAME_CONTAINS_TEXT) &&
+                            DragonHelperConfig.get().getBoolean("ui.endstoneProtectorTimer", true)),
                     new ScreenElement("endstone-protector-timer", "endstone.png", 270, 10, 30, 30),
                     new TextElement("endstone-protector-text", () -> {
                         if (DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime() == 0) return "Loading...";
@@ -57,12 +63,14 @@ public class DragonHelperScreen extends Screen {
                     }, () -> 0xFFFFFF, 290, 10, 50, 50, true)
             ),
             new ScreenElementGroup(
-                    () -> DragonHelperConfig.get().ui.rngMeterTracker,
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.RNG_METER_TRACKING_COMMAND) &&
+                            DragonHelperConfig.get().getBoolean("ui.rngMeterTracker", true)),
                     new TextElement("rng-meter-exp-text", () -> Utils.formatNumber(DragonHelperClient.getPlayerData().getRngMeterExp()) + " RNG Meter Experience",
                             () -> 0xF803FC, 15, 200, 50, 50, true)
             ),
             new ScreenElementGroup(
-                    () -> DragonHelperConfig.get().ui.zombieSlayerLevelTracker,
+                    () -> (ServerConfig.instance.currentServerHasFeature(Feature.SLAYER_EXP_TRACKING_COMMAND) &&
+                            DragonHelperConfig.get().getBoolean("ui.zombieSlayerLevelTracker", true)),
                     new ScreenElement("zombie-slayer-tracker", "zombie-slayer.png", 450, 10, 15, 30),
                     new TextElement("zombie-slayer-tracker-text", () -> {
                         int exp = DragonHelperClient.getPlayerData().getZombieSlayerExp();
