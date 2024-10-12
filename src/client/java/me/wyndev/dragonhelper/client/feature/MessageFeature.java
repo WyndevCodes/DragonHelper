@@ -57,7 +57,8 @@ public class MessageFeature {
             }
 
             //endstone protector notification on spawn without boss bar
-            if (protectorName != null && rawLowerText.contains(protectorName) && protectorSpawnMessage != null && rawLowerText.contains(protectorSpawnMessage)) {
+            if (protectorName != null && rawLowerText.contains(protectorName) && protectorSpawnMessage != null
+                    && rawLowerText.contains(protectorSpawnMessage) && DragonHelperConfig.get().getBoolean("notifications.notifyForEndstoneProtector")) {
                 //set the new last spawn time
                 DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
                 //title notification
