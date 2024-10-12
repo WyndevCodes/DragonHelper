@@ -97,7 +97,8 @@ public class Utils {
         ServerInfo serverInfo = networkHandler.getServerInfo();
         if (serverInfo == null) return null;
         //return name of server if it is valid
-        if (ServerConfig.instance.getMap(serverInfo.name.toLowerCase()) != null) return serverInfo.name.toLowerCase();
+        if (ServerConfig.instance.getMap(serverInfo.name.toLowerCase(), null) != null)
+            return serverInfo.name.toLowerCase();
         //if the server name itself is not valid, try parsing the IP
         for (String server : ServerConfig.instance.getServerFeatureData().keySet()) {
             if (serverInfo.address.toLowerCase().contains(server)) return server;

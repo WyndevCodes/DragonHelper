@@ -12,10 +12,10 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.text.Text;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.File;
 
 public class DragonHelperClient implements ClientModInitializer {
@@ -68,10 +68,9 @@ public class DragonHelperClient implements ClientModInitializer {
         });
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (handler.getServerInfo() == null) return;
-            String server = StringUtils.capitalize(handler.getServerInfo().name.toLowerCase());
-            if (client.player != null) client.player.sendMessage(Text.of("You have joined " + server + "! Your " + server +
-                    " settings will apply here since this is a valid dragon server!").copy().withColor(0x0000FF));
+            String server = Utils.getClientServer(handler);
+            if (client.player != null && server != null) client.player.sendMessage(Text.of("You have joined " + server + "! Your " + server +
+                    " settings will apply here since this is a valid dragon server!").copy().withColor(Color.GREEN.getRGB()));
         });
 
         LOGGER.info("{}Mod initialization complete!", LOGGER_PREFIX);
