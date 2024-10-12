@@ -37,7 +37,7 @@ public class MessageFeature {
             //dragon drop message
             if (dragonDropText != null && rawLowerText.contains(dragonDropText)) {
                 if (!rawText.contains(displayName)) {
-                    if (DragonHelperConfig.get().messages.hideOtherPlayerDrops) return false; //hide other user drop messages
+                    if (DragonHelperConfig.get().getBoolean("messages.hideOtherPlayerDrops", true)) return false; //hide other user drop messages
                 } else {
                     //does contain name, add 1 to dragons killed
                     DragonHelperClient.getPlayerData().setDragonKills(DragonHelperClient.getPlayerData().getDragonKills() + 1);
@@ -45,27 +45,27 @@ public class MessageFeature {
             }
 
             //eye placement message
-            if (eyePlaceText != null && rawLowerText.contains(eyePlaceText) && DragonHelperConfig.get().messages.hideSummoningEyePlace) {
+            if (eyePlaceText != null && rawLowerText.contains(eyePlaceText) && DragonHelperConfig.get().getBoolean("messages.hideSummoningEyePlace", false)) {
                 return false; //hide summoning eye placement messages
             }
 
             //loot number message
-            if (lootNumText != null && rawLowerText.contains(lootNumText) && DragonHelperConfig.get().messages.hideLootnumText) {
+            if (lootNumText != null && rawLowerText.contains(lootNumText) && DragonHelperConfig.get().getBoolean("messages.hideLootnumText", false)) {
                 return false; //hide loot messages
             }
 
             //pvp message
-            if (pvpProtectionText != null && rawLowerText.contains(pvpProtectionText) && DragonHelperConfig.get().messages.hidePvpProtectionText) {
+            if (pvpProtectionText != null && rawLowerText.contains(pvpProtectionText) && DragonHelperConfig.get().getBoolean("messages.hidePvpProtectionText", true)) {
                 return false; //hide pvp protection message
             }
 
             //dragon notifier
             if (rawLowerText.contains("dragon") && dragonSpawnText != null && rawLowerText.contains(dragonSpawnText)) {
                 //infernal and superior notification
-                if (rawLowerText.contains("superior") && DragonHelperConfig.get().notifications.notifyForSuperior) {
+                if (rawLowerText.contains("superior") && DragonHelperConfig.get().getBoolean("notifications.notifyForSuperior", true)) {
                     Utils.sendTitleToClient(Text.of("Superior Dragon Spawn!").copy().withColor(0xFF0000));
                     player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
-                } else if (hasInfernal != null && (Boolean)hasInfernal && rawLowerText.contains("infernal") && DragonHelperConfig.get().notifications.notifyForInfernal) {
+                } else if (hasInfernal != null && (Boolean)hasInfernal && rawLowerText.contains("infernal") && DragonHelperConfig.get().getBoolean("notifications.notifyForInfernal", true)) {
                     Utils.sendTitleToClient(Text.of("Infernal Dragon Spawn!").copy().withColor(0xFC7703));
                     player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 }
@@ -76,7 +76,7 @@ public class MessageFeature {
     }
 
     public static void sendEndstoneGolemNotificationToClient() {
-        if (DragonHelperConfig.get().notifications.notifyForEndstoneProtector) {
+        if (DragonHelperConfig.get().getBoolean("notifications.notifyForEndstoneProtector", true)) {
             Utils.sendTitleToClient(Text.of("Endstone Protector Spawn!").copy().withColor(0xA903FC));
             if (MinecraftClient.getInstance().player != null) MinecraftClient.getInstance().player.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
         }

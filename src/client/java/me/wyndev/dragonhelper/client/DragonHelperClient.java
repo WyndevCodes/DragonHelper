@@ -1,7 +1,5 @@
 package me.wyndev.dragonhelper.client;
 
-import static net.minecraft.server.command.CommandManager.*;
-
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
 import me.wyndev.dragonhelper.client.config.ServerConfig;
 import me.wyndev.dragonhelper.client.data.ModData;
@@ -10,7 +8,8 @@ import me.wyndev.dragonhelper.client.data.ServerDataTracker;
 import me.wyndev.dragonhelper.client.feature.*;
 import me.wyndev.dragonhelper.client.hud.DragonHelperScreen;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +52,13 @@ public class DragonHelperClient implements ClientModInitializer {
 
         //create dhc reload command
         LOGGER.info("Setting up dragonhelper command...");
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(literal("dragonhelper")
-                    .then(literal("reload")
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("dragonhelper")
+                    .then(ClientCommandManager.literal("reload")
                     .executes(context -> {
                         //reload server config
                         ServerConfig.instance.loadData();
-                        context.getSource().sendFeedback(() -> Text.of("Reloaded server.yml file!").copy().withColor(0x00FF00), false);
+                        context.getSource().sendFeedback(Text.of("Reloaded the mod's servers.json file!").copy().withColor(0x00FF00));
 
                         return 1;
                     })));

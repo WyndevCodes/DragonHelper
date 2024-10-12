@@ -20,9 +20,10 @@ public class AutoSellFeature {
             if (client.player == null) return;
 
             //check auto-sell intervals
-            if ((++tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) != 0 &&
-                    (tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) != additionalSellOffset + randomOffset &&
-                    (tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) != (additionalSellOffset * 2) + randomOffset) return;
+            int autoSellInterval = DragonHelperConfig.get().getInt("autosell.autoSellInterval", 20) * 20;
+            if ((++tick % autoSellInterval != 0) &&
+                    (tick % autoSellInterval) != additionalSellOffset + randomOffset &&
+                    (tick % autoSellInterval) != (additionalSellOffset * 2) + randomOffset) return;
 
             //auto-sell on pickup
             ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
@@ -34,21 +35,21 @@ public class AutoSellFeature {
             String eyeCommand = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.AUTO_SELL_EYES);
 
             //regular sell command (sell regular items)
-            if (normalCommand != null && DragonHelperConfig.get().autosell.normalAutoSell &&
-                    (tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) == 0) {
+            if (normalCommand != null && DragonHelperConfig.get().getBoolean("autosell.normalAutoSell", true) &&
+                    (tick % autoSellInterval) == 0) {
                 networkHandler.sendCommand(normalCommand);
-                randomOffset = random.nextInt(DragonHelperConfig.get().autosell.autoSellInterval / 4);
+                randomOffset = random.nextInt(autoSellInterval / 4);
             }
 
             //advanced sell command (sell non-regular items)
-            if (specialCommand != null && DragonHelperConfig.get().autosell.specialAutoSell &&
-                    (tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) == additionalSellOffset + randomOffset) {
+            if (specialCommand != null && DragonHelperConfig.get().getBoolean("autosell.specialAutoSell", false) &&
+                    (tick % autoSellInterval) == additionalSellOffset + randomOffset) {
                 networkHandler.sendCommand(specialCommand);
             }
 
             //eye sell command (sell summoning eyes)
-            if (eyeCommand != null && DragonHelperConfig.get().autosell.autoSellEyes &&
-                    (tick % (DragonHelperConfig.get().autosell.autoSellInterval * 20)) == (additionalSellOffset * 2) + randomOffset) {
+            if (eyeCommand != null && DragonHelperConfig.get().getBoolean("autosell.autoSellEyes", false) &&
+                    (tick % autoSellInterval) == (additionalSellOffset * 2) + randomOffset) {
                 networkHandler.sendCommand(eyeCommand);
             }
         });

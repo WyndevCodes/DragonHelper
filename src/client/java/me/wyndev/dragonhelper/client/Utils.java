@@ -70,7 +70,7 @@ public class Utils {
 
     /**
      * Gets the current server that the minecraft client is connected to, if it is a valid server for this mod.
-     * @return The lowercased server name of the {@link MinecraftClient#getInstance()} is connected to, or null if not valid
+     * @return The lowercased server name of the server the {@link MinecraftClient#getInstance()} is connected to, or null if not valid
      */
     @Nullable
     public static String getClientServer() {
@@ -79,7 +79,7 @@ public class Utils {
 
     /**
      * Gets the current server that the minecraft client is connected to, if it is a valid server for this mod.
-     * @return The lowercased server name of the {@link MinecraftClient} is connected to, or null if not valid
+     * @return The lowercased server name of the server the {@link MinecraftClient} is connected to, or null if not valid
      */
     @Nullable
     public static String getClientServer(MinecraftClient minecraftClient) {
@@ -88,7 +88,7 @@ public class Utils {
 
     /**
      * Gets the current server that the minecraft client's network handler is connected to, if it is a valid server for this mod.
-     * @return The lowercased server name of the {@link ClientPlayNetworkHandler} is connected to, or null if not valid
+     * @return The lowercased server name of the server the {@link ClientPlayNetworkHandler} is connected to, or null if not valid
      */
     @Nullable
     public static String getClientServer(@Nullable ClientPlayNetworkHandler networkHandler) {

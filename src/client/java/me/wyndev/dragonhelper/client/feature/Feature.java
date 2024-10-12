@@ -39,4 +39,26 @@ public enum Feature {
         return featureClass.cast(obj);
     }
 
+    /**
+     * A category for features to help the config check if the server
+     * the user is connected to should show a specific configuration
+     * category.
+     */
+    public enum FeatureCategory {
+        MESSAGES(DRAGON_DROP_CONTAINS_TEXT, EYE_PLACE_CONTAINS_TEXT, LOOTNUM_CONTAINS_TEXT, PVP_PROTECTION_MESSAGE_CONTAINS),
+        AUTOSELL(AUTO_SELL_EYES, AUTO_SELL_NORMAL, AUTO_SELL_SPECIAL),
+        NOTIFICATIONS(DRAGON_SPAWN_CONTAINS_TEXT, HAS_INFERNAL_DRAGONS, PROTECTOR_NAME_CONTAINS_TEXT),
+        UI(KILL_TRACKING_COMMAND, RNG_METER_TRACKING_COMMAND, SLAYER_EXP_TRACKING_COMMAND, PROTECTOR_NAME_CONTAINS_TEXT);
+
+        private final Feature[] features;
+
+        FeatureCategory(Feature... features) {
+            this.features = features;
+        }
+
+        public Feature[] getFeaturesInCategory() {
+            return features;
+        }
+    }
+
 }
