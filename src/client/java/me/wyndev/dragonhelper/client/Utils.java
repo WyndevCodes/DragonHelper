@@ -1,5 +1,6 @@
 package me.wyndev.dragonhelper.client;
 
+import me.wyndev.dragonhelper.client.config.ServerConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
@@ -94,7 +95,14 @@ public class Utils {
     public static String getClientServer(@Nullable ClientPlayNetworkHandler networkHandler) {
         if (networkHandler == null) return null;
         ServerInfo serverInfo = networkHandler.getServerInfo();
-        return (serverInfo != null ? serverInfo.name.toLowerCase() : null);
+        if (serverInfo == null) return null;
+        //return name of server if it is valid
+        if (ServerConfig.instance.getMap(serverInfo.name.toLowerCase()) != null) return serverInfo.name.toLowerCase();
+        //if the server name itself is not valid, try parsing the IP
+        for (String server : ServerConfig.instance.getServerFeatureData().keySet()) {
+            if (serverInfo.address.toLowerCase().contains(server)) return server;
+        }
+        return null;
     }
 
 }

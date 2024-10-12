@@ -81,6 +81,10 @@ public class ServerConfig extends JsonDataProvider {
         if (p.second) saveData();
     }
 
+    public Map<String, Map<Feature, Object>> getServerFeatureData() {
+        return serverFeatureData;
+    }
+
     @Nullable
     public Object getServerFeatureValue(@Nullable String server, @NotNull Feature feature) {
         if (server == null || !serverFeatureData.containsKey(server.toLowerCase())) return null;
