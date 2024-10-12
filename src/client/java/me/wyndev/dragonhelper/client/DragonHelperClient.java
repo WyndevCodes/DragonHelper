@@ -10,7 +10,9 @@ import me.wyndev.dragonhelper.client.hud.DragonHelperScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.text.Text;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,7 @@ public class DragonHelperClient implements ClientModInitializer {
     public static String NAMESPACE = "dragonhelper";
     public static final String CONFIG_DIRECTORY = "config" + File.separator + "dragonhelper";
     public static Logger LOGGER = LoggerFactory.getLogger("DragonHelper");
+    public static String LOGGER_PREFIX = "[DragonHelper] ";
 
     private static PlayerData playerData;
     private static ServerDataTracker serverDataTracker;
@@ -28,7 +31,7 @@ public class DragonHelperClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        LOGGER.info("Registering configs...");
+        LOGGER.info("{}Registering configs...", LOGGER_PREFIX);
         //create mod directory if it does not exist
         File dir = new File(CONFIG_DIRECTORY);
         if (!dir.exists()) dir.mkdirs();
@@ -40,7 +43,7 @@ public class DragonHelperClient implements ClientModInitializer {
         serverDataTracker = new ServerDataTracker();
         playerData = new PlayerData();
 
-        LOGGER.info("Initializing mod features...");
+        LOGGER.info("{}Initializing mod features...", LOGGER_PREFIX);
         MessageFeature.register();
         AutoSellFeature.register();
         KillTrackingFeature.register();
@@ -51,7 +54,7 @@ public class DragonHelperClient implements ClientModInitializer {
         DragonHelperScreen.register();
 
         //create dhc reload command
-        LOGGER.info("Setting up dragonhelper command...");
+        LOGGER.info("{}Setting up dragonhelper command...", LOGGER_PREFIX);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("dragonhelper")
                     .then(ClientCommandManager.literal("reload")
@@ -64,7 +67,14 @@ public class DragonHelperClient implements ClientModInitializer {
                     })));
         });
 
-        LOGGER.info("Mod initialization complete!");
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            if (handler.getServerInfo() == null) return;
+            String server = StringUtils.capitalize(handler.getServerInfo().name.toLowerCase());
+            if (client.player != null) client.player.sendMessage(Text.of("You have joined " + server + "! Your " + server +
+                    " settings will apply here since this is a valid dragon server!").copy().withColor(0x0000FF));
+        });
+
+        LOGGER.info("{}Mod initialization complete!", LOGGER_PREFIX);
     }
 
     public static PlayerData getPlayerData() {

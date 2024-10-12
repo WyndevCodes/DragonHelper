@@ -24,11 +24,16 @@ public class KillTrackingFeature {
             String textString = text.getString().toLowerCase();
 
             if (contains == null || !textString.contains(contains)) return true;
-            //dragon kill logic is done somewhere else
             if (textString.contains("zealot")) {
                 DragonHelperClient.getPlayerData().setZealotKills(DragonHelperClient.getPlayerData().getZealotKills() + 1);
             } else if (protector != null && textString.contains(protector)) {
                 DragonHelperClient.getPlayerData().setEndstoneProtectorKills(DragonHelperClient.getPlayerData().getEndstoneProtectorKills() + 1);
+            } else if (textString.contains("dragon")) {
+                DragonHelperClient.getPlayerData().setDragonKills(DragonHelperClient.getPlayerData().getDragonKills() + 1);
+            } else if (textString.contains("watcher")) {
+                DragonHelperClient.getPlayerData().setWatcherKills(DragonHelperClient.getPlayerData().getWatcherKills() + 1);
+            } else if (textString.contains("obsidian defender")) {
+                DragonHelperClient.getPlayerData().setObsidianDefenderKills(DragonHelperClient.getPlayerData().getObsidianDefenderKills() + 1);
             } else if (textString.contains("crypt ghoul")) {
                 DragonHelperClient.getPlayerData().setCryptGhoulKills(DragonHelperClient.getPlayerData().getCryptGhoulKills() + 1);
             } else if (textString.contains("atoned")) {

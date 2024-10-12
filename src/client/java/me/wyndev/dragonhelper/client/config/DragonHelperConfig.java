@@ -4,6 +4,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.data.JsonDataProvider;
 import me.wyndev.dragonhelper.client.feature.Feature;
@@ -63,6 +64,7 @@ public class DragonHelperConfig extends JsonDataProvider {
     @Nullable
     public static Screen createConfig(Screen parent) {
         String server = Utils.getClientServer();
+        DragonHelperClient.LOGGER.info("{}Config was opened while the client was connected to the server: {}", DragonHelperClient.LOGGER_PREFIX, server);
         if (server == null) return null;
 
         ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(Text.translatable("text.config.dragonhelper.title"));

@@ -1,6 +1,5 @@
 package me.wyndev.dragonhelper.client.feature;
 
-import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
 import me.wyndev.dragonhelper.client.config.ServerConfig;
@@ -35,13 +34,8 @@ public class MessageFeature {
 
             //check for message
             //dragon drop message
-            if (dragonDropText != null && rawLowerText.contains(dragonDropText)) {
-                if (!rawText.contains(displayName)) {
-                    if (DragonHelperConfig.get().getBoolean("messages.hideOtherPlayerDrops", true)) return false; //hide other user drop messages
-                } else {
-                    //does contain name, add 1 to dragons killed
-                    DragonHelperClient.getPlayerData().setDragonKills(DragonHelperClient.getPlayerData().getDragonKills() + 1);
-                }
+            if (dragonDropText != null && rawLowerText.contains(dragonDropText) && !rawText.contains(displayName)) {
+                if (DragonHelperConfig.get().getBoolean("messages.hideOtherPlayerDrops", true)) return false; //hide other user drop messages
             }
 
             //eye placement message

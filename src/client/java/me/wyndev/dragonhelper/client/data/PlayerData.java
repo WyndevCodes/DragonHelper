@@ -12,7 +12,9 @@ public class PlayerData {
             "zealot-kills", 0,
             "endstone-protector-kills", 0,
             "crypt-ghoul-kills", 0,
-            "zombie-slayer-kills", 0
+            "zombie-slayer-kills", 0,
+            "watcher-kills", 0,
+            "obsidian-defender-kills", 0
     ));
     private int rngMeterExp = 0;
     private final Map<String, Integer> slayerExperience = new HashMap<>(Map.of(
@@ -67,6 +69,22 @@ public class PlayerData {
 
     public void setCryptGhoulKills(int cryptGhoulKills) {
         mobKills.put("crypt-ghoul-kills", cryptGhoulKills);
+    }
+
+    public int getWatcherKills() {
+        return mobKills.getOrDefault("watcher-kills", 0);
+    }
+
+    public void setWatcherKills(int watcherKills) {
+        mobKills.put("watcher-kills", watcherKills);
+    }
+
+    public int getObsidianDefenderKills() {
+        return mobKills.getOrDefault("obsidian-defender-kills", 0);
+    }
+
+    public void setObsidianDefenderKills(int obsidianDefenderKills) {
+        mobKills.put("obsidian-defender-kills", obsidianDefenderKills);
     }
 
     public int getZombieSlayerBossKills() {
