@@ -1,5 +1,6 @@
 package me.wyndev.dragonhelper.client.feature;
 
+import me.wyndev.dragonhelper.client.DragonHelperClient;
 import me.wyndev.dragonhelper.client.Utils;
 import me.wyndev.dragonhelper.client.config.DragonHelperConfig;
 import me.wyndev.dragonhelper.client.config.ServerConfig;
@@ -57,6 +58,8 @@ public class MessageFeature {
 
             //endstone protector notification on spawn without boss bar
             if (protectorName != null && rawLowerText.contains(protectorName) && protectorSpawnMessage != null && rawLowerText.contains(protectorSpawnMessage)) {
+                //set the new last spawn time
+                DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
                 //title notification
                 sendEndstoneGolemNotificationToClient();
                 return true;

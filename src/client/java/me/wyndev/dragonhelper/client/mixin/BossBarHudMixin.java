@@ -19,9 +19,6 @@ public class BossBarHudMixin {
         //return if the endstone protector has been recently spawned
         if (System.currentTimeMillis() - DragonHelperClient.getServerDataTracker().getLastSpawnedEndstoneProtectorTime() < 20_000) return bar;
 
-        //set the new last spawn time
-        DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
-
         String server = Utils.getClientServer();
         if (server == null) return bar;
 
@@ -32,6 +29,9 @@ public class BossBarHudMixin {
 
         //send the spawn notification to the client
         if (name != null && bar.getName().getString().toLowerCase().contains(name)) {
+            //set the new last spawn time
+            DragonHelperClient.getServerDataTracker().setLastSpawnedEndstoneProtectorTime(System.currentTimeMillis());
+
             MessageFeature.sendEndstoneGolemNotificationToClient();
         }
 

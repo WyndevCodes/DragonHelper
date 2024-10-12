@@ -64,7 +64,7 @@ public class ServerConfig extends JsonDataProvider {
         dragfightsData.put("pvp-protection-message-contains", "you can't pvp here");
         dragfightsData.put("protector-name-contains-text", "protector");
         dragfightsData.put("protector-spawn-chat-message", "an endstone protector has risen");
-        dragfightsData.put("protector-timer", 60);
+        dragfightsData.put("protector-timer", 300);
 
         return Map.of(
                 "dragnet", dragnetData,
