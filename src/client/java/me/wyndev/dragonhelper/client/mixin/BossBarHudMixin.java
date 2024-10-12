@@ -24,6 +24,10 @@ public class BossBarHudMixin {
 
         String server = Utils.getClientServer();
         if (server == null) return bar;
+
+        Object hasProtectorSpawnMessage = ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_HAS_SPAWN_MESSAGE);
+        if (hasProtectorSpawnMessage != null && (Boolean)hasProtectorSpawnMessage) return bar; //exit if the server has a protector spawn message
+
         String name = (String) ServerConfig.instance.getServerFeatureValue(server, Feature.PROTECTOR_NAME_CONTAINS_TEXT);
 
         //send the spawn notification to the client
