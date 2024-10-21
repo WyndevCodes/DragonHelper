@@ -53,7 +53,7 @@ public class ServerConfig extends JsonDataProvider {
         dragnetData.put("dragon-spawn-contains-text", "has spawned");
         dragnetData.put("protector-timer", 60.0);
 
-        Map<String, Object> dragfightsData = new HashMap<>(11);
+        Map<String, Object> dragfightsData = new HashMap<>(17);
         dragfightsData.put("auto-sell-normal", "sellall");
         dragfightsData.put("kill-tracking-command", "debugkill");
         dragfightsData.put("kill-contains-text", "you killed");
@@ -65,6 +65,12 @@ public class ServerConfig extends JsonDataProvider {
         dragfightsData.put("protector-name-contains-text", "protector");
         dragfightsData.put("protector-spawn-chat-message", "an endstone protector has risen");
         dragfightsData.put("protector-timer", 300.0);
+        dragfightsData.put("rng-meter-load-contains-text", "rng meter experience");
+        dragfightsData.put("rng-meter-update-starts-text", "rng meter experience");
+        dragfightsData.put("slayer-exp-load-contains-text", "slayer level experience");
+        dragfightsData.put("slayer-exp-update-contains-text", "slayer level experience");
+        dragfightsData.put("rng-meter-tracking-command", "rngmeterexp");
+        dragnetData.put("slayer-exp-tracking-command", "debugslayerxp");
 
         return Map.of(
                 "dragnet", dragnetData,

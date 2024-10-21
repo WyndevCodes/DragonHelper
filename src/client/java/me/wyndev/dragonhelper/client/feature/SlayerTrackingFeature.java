@@ -44,13 +44,14 @@ public class SlayerTrackingFeature {
                     if (s.contains("zombie")) {
                         DragonHelperClient.getPlayerData().setZombieSlayerExp(exp);
                     }
+                    return false;
                 } catch (NumberFormatException ignored) {}
             }
 
             return true;
         });
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> state = State.NONE);
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {state = State.NONE; currentTick = 0;});
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> state = State.NONE);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {

@@ -88,7 +88,7 @@ public class KillTrackingFeature {
             return false;
         });
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> hasSentTrackingCommand = false);
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {hasSentTrackingCommand = false; ticks = 0;});
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> hasSentTrackingCommand = false);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
