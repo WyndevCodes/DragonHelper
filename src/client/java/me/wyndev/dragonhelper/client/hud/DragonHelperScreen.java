@@ -79,7 +79,7 @@ public class DragonHelperScreen extends Screen {
                         int exp = DragonHelperClient.getPlayerData().getZombieSlayerExp();
                         String currentExp = Utils.formatNumber(exp);
                         String server = Utils.getClientServer();
-                        int key = SlayerLevel.getSlayerLevelsForServer(server).ceilingKey(exp);
+                        int key = SlayerLevel.getSlayerLevelsForServer(server).ceilingKey(exp + 1);
                         String[] slayers = SlayerLevel.getSlayerLevelsForServer(server).getOrDefault(key, new String[]{"MAXED OUT!"});
                         for (String slayer : slayers) {
                             if (slayer.equals("MAXED OUT")) {
